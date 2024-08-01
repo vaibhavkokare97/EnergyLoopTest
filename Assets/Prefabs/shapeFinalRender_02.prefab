@@ -127,10 +127,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 813ae0a2195b6db4fa4aa1609cac147e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topConnected: 0
-  topRightConnected: 1
-  topLeftConnected: 0
-  bottomConnected: 1
-  bottomRightConnected: 0
-  bottomLeftConnected: 0
-  tileType: 2
+  connectedLinksToSide: 000100010000
+  tile: {fileID: 0}
+  _tileType: 2

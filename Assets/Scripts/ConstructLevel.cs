@@ -6,19 +6,23 @@ using UnityEngine.Tilemaps;
 
 public class ConstructLevel : MonoBehaviour
 {
-    public List<TileData> tileDataList = new List<TileData>();
+    public Dictionary<Tile, TileData> tileDataList = new Dictionary<Tile, TileData>();
 
     public void FillTillDataList()
     {
         tileDataList.Clear();
-        tileDataList = gameObject.GetComponentsInChildren<TileData>().ToList();
+        foreach (var item in gameObject.GetComponentsInChildren<TileData>())
+        {
+            item.SetTile();
+            tileDataList.Add(item.tile, item);
+        }
     }
 
     public void SnapAllTiles()
     {
-        foreach (TileData tileData in tileDataList)
+        foreach (var tileData in tileDataList)
         {
-            SnapToNearestAngle.SnapRotation(tileData.transform, Vector3.forward, 60f);
+            SnapToNearestAngle.SnapRotation(tileData.Value.transform, Vector3.forward, 60f);
         }
     }
 }
