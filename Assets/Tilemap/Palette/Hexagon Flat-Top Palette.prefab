@@ -62,22 +62,22 @@ Tilemap:
   m_TileMatrixArray:
   - m_RefCount: 0
     m_Data:
-      e00: 0
+      e00: -8.3409057e+37
       e01: 0
-      e02: 8.081546e-39
-      e03: 8.081546e-39
-      e10: 0
+      e02: -1.4495531e+10
+      e03: -1.4495531e+10
+      e10: 7.37e-43
       e11: 0
-      e12: 5.48e-43
-      e13: 5.48e-43
-      e20: -6.43302e-31
+      e12: 7.37e-43
+      e13: 7.37e-43
+      e20: -8.587365e-20
       e21: 1e-45
-      e22: -8.3335676e-19
-      e23: 1.0803657e+20
+      e22: 0.0000000012517818
+      e23: -3.2038063e+35
       e30: 4.5905e-41
       e31: 0
-      e32: 5.48e-43
-      e33: 5.5e-43
+      e32: 7.38e-43
+      e33: 7.38e-43
   m_TileColorArray:
   - m_RefCount: 0
     m_Data: {r: NaN, g: NaN, b: NaN, a: NaN}
@@ -294,6 +294,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 104633291334832522, guid: 36dd6e2c28fb90648bf334c681878021, type: 3}
       propertyPath: m_DynamicOccludee
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 104633291334832522, guid: 36dd6e2c28fb90648bf334c681878021, type: 3}
+      propertyPath: m_LightProbeUsage
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2966183999180187872, guid: 36dd6e2c28fb90648bf334c681878021, type: 3}
@@ -631,7 +635,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7578766005894040982, guid: 7482fe205d61d8f45a3c0b14713df8ef, type: 3}
   m_PrefabInstance: {fileID: 3735996943057137365}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4389221830661272357
+--- !u!114 &1280967544871940437
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
