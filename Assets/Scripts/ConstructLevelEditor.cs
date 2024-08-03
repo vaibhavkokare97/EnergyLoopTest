@@ -17,7 +17,7 @@ class ConstructLevelEditor : Editor
     {
         if (GUILayout.Button("Construct"))
         {
-            _target.FillTillDataList();
+            _target.FillTileDataList();
             _target.SnapAllTiles();
         }
             

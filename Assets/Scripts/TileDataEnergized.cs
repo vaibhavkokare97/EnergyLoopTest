@@ -12,9 +12,10 @@ public class TileDataEnergized : TileDataBase
         }
     }
 
+    /*
     protected override IEnumerator Start()
     {
         GetComponent<SpriteRenderer>().color = Color.red;
         return base.Start();
-    }
+    }*/
 }

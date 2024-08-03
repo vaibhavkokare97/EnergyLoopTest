@@ -4,5 +4,12 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    public ConstructLevel constructLevel;
+    [SerializeField] private ConstructLevel _constructLevel;
+    public ConstructLevel constructLevel
+    {
+        get
+        {
+            return _constructLevel;
+        }
+    }
 }

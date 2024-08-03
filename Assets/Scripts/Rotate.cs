@@ -11,7 +11,7 @@ public class Rotate : MonoBehaviour
 
     private void OnMouseDown()
     {
-        OnRotateClickAction.Invoke();
+        OnRotateClickAction?.Invoke();
         transform.DORotate(new Vector3(0, 0, _currentAngle - 60f), 0.2f, RotateMode.Fast);
         _currentAngle += -60f;
     }

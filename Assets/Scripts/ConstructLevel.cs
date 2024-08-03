@@ -6,15 +6,58 @@ using UnityEngine.Tilemaps;
 
 public class ConstructLevel : MonoBehaviour
 {
-    public Dictionary<Tile, TileData> tileDataList = new Dictionary<Tile, TileData>();
+    public Tilemap tilemap;
+    public Dictionary<Tile, TileDataBase> tileDataList = new Dictionary<Tile, TileDataBase>();
+    public Graph<TileDataBase> tileNetwork;
 
-    public void FillTillDataList()
+    private void Start()
     {
+        FillTileDataList();
+    }
+
+    public void FillTileDataList()
+    {
+        tilemap = GetComponent<Tilemap>();
         tileDataList.Clear();
-        foreach (var item in gameObject.GetComponentsInChildren<TileData>())
+        tileNetwork = new Graph<TileDataBase>();
+        foreach (var item in gameObject.GetComponentsInChildren<TileDataBase>())
         {
             item.SetTile();
             tileDataList.Add(item.tile, item);
+            tileNetwork.AddNode(item);
+        }
+    }
+
+    public void Energize()
+    {
+        var nonEnergyTiles = tileNetwork.Nodes.Where((e) => e.Value.tileType != TileStructure.TileType.EnergyTile).ToList();
+        foreach (var node in nonEnergyTiles)
+        {
+            node.Value.energized = false;
+        }
+
+        var energyTiles = tileNetwork.Nodes.Where((e) => e.Value.tileType == TileStructure.TileType.EnergyTile).ToList();
+        foreach (var energyTile in energyTiles)
+        {
+            for (int i = 0; i < energyTile.Neighbours.Count; i++)
+            {
+                EnergizeNeighbours(energyTile);
+            }
+        }
+    }
+
+    private void EnergizeNeighbours(GraphNode<TileDataBase> tileDataNode)
+    {
+        if (tileDataNode.Neighbours.Count > 0)
+        {
+            foreach (var neighbour in tileDataNode.Neighbours)
+            {
+                if (neighbour.Value.energized == false)
+                {
+                    neighbour.Value.energized = true;
+                    EnergizeNeighbours(neighbour);
+                }
+            }
         }
     }
 
