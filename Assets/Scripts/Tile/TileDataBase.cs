@@ -7,15 +7,15 @@ using System.Linq;
 
 public abstract class TileDataBase : MonoBehaviour
 {
-    public bool[] connectedLinksToSide = new bool[6] { false, false, false, false, false, false }; // start from top
+    protected bool[] connectedLinksToSide = new bool[6] { false, false, false, false, false, false }; // start from top
 
-    public Tile tile;
+    [HideInInspector] public Tile tile;
     protected Vector3 _location;
     protected Vector3Int _tileLocation;
     public TileStructure.TileType tileType;
 
     private Tilemap _tilemap;
-    public List<TileDataBase> neighbouringTiles = new List<TileDataBase>(); // neighbour's start from top
+    [HideInInspector] public List<TileDataBase> neighbouringTiles = new List<TileDataBase>(); // neighbour's start from top
     private bool _energized = false;
     public virtual bool energized
     {
@@ -29,7 +29,6 @@ public abstract class TileDataBase : MonoBehaviour
             {
                 OnEnergized?.Invoke(value);
                 _energized = value;
-                GetComponent<SpriteRenderer>().color = (energized) ? Color.red : Color.white;
             }
         }
     }
@@ -44,7 +43,7 @@ public abstract class TileDataBase : MonoBehaviour
 
     protected virtual IEnumerator Start()
     {
-        
+        connectedLinksToSide = TileStructure.ConnectedSides(tileType);
         yield return new WaitForSeconds(0.1f);
         _tilemap = GameManager.Instance.constructLevel.tilemap;
         _location = gameObject.transform.position;
@@ -60,14 +59,17 @@ public abstract class TileDataBase : MonoBehaviour
             if (item != null)
             {
                 item.OnTileTap += TileTapConnectionChangesCheck;
-                //item.Key.OnEnergized += CheckAllSidesAboutEnergizing;
             }
 
         }
+        OnEnergized += OnTileEnergize;
         GetComponent<Rotate>().OnRotateClickAction += ChangeConnectedSides;
     }
 
-
+    void OnTileEnergize(bool onEnergize)
+    {
+        GetComponent<SpriteRenderer>().color = (onEnergize) ? Color.white : new Color(1f,1f,1f, 0.2f);
+    }
 
     protected virtual void ChangeConnectedSides()
     {
@@ -171,6 +173,7 @@ public abstract class TileDataBase : MonoBehaviour
     private void OnDisable()
     {
         GetComponent<Rotate>().OnRotateClickAction -= ChangeConnectedSides;
+        OnEnergized -= OnTileEnergize;
         foreach (var item in neighbouringTiles)
         {
             if (item != null)

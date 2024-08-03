@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 104633291334832522}
   - component: {fileID: 3577912155606829716}
   - component: {fileID: 1464529612016466743}
-  - component: {fileID: 4361040819050004842}
+  - component: {fileID: 7745977946160975183}
   m_Layer: 0
   m_Name: shapeFinalRender_specialEnergy
   m_TagString: Untagged
@@ -200,7 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7c780c93eac3c4fa8e0c7c16acf73b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4361040819050004842
+--- !u!114 &7745977946160975183
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -209,9 +209,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2966183999180187872}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 813ae0a2195b6db4fa4aa1609cac147e, type: 3}
+  m_Script: {fileID: 11500000, guid: 9718e99a9bbc6934faf7c61809f6af35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectedLinksToSide: 000000000100
   tile: {fileID: 0}
   tileType: 5
+  neighbouringTiles: []

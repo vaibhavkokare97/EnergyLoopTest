@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 104633291334832522}
   - component: {fileID: 3577912155606829716}
   - component: {fileID: 1464529612016466743}
-  - component: {fileID: 4361040819050004842}
+  - component: {fileID: 7477135774267385685}
   m_Layer: 0
   m_Name: shapeFinalRender_specialBulb
   m_TagString: Untagged
@@ -162,7 +162,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1b6617aa11ea7244390909fa9a4adbe7, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.2}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -200,7 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7c780c93eac3c4fa8e0c7c16acf73b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4361040819050004842
+--- !u!114 &7477135774267385685
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -209,9 +209,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2966183999180187872}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 813ae0a2195b6db4fa4aa1609cac147e, type: 3}
+  m_Script: {fileID: 11500000, guid: 913240324256c3246ae8b2ec8a3ce9c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectedLinksToSide: 000000000100
   tile: {fileID: 0}
   tileType: 4
+  neighbouringTiles: []
