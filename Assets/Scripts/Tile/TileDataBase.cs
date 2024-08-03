@@ -128,7 +128,7 @@ public abstract class TileDataBase : MonoBehaviour
         TileDataBase tileBottomLeftData = (tileBottomLeft != null) ? GameManager.Instance.constructLevel.tileDataList[tileBottomLeft] : null;
         neighbouringTiles.Add(tileBottomLeftData);
 
-        Vector3Int neighbouringLocationTopLeft = (_tileLocation.y % 2 == 0) ? new Vector3Int(_tileLocation.x, _tileLocation.y + 1, _tileLocation.z) :
+        Vector3Int neighbouringLocationTopLeft = (_tileLocation.y % 2 == 0) ? new Vector3Int(_tileLocation.x, _tileLocation.y - 1, _tileLocation.z) :
             new Vector3Int(_tileLocation.x + 1, _tileLocation.y - 1, _tileLocation.z);
         Tile tileTopLeft = _tilemap.GetTile<Tile>(neighbouringLocationTopLeft);
         TileDataBase tileTopLeftData = (tileTopLeft != null) ? GameManager.Instance.constructLevel.tileDataList[tileTopLeft] : null;
