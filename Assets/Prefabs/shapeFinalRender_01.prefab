@@ -129,4 +129,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectedLinksToSide: 000101000000
   tile: {fileID: 0}
-  _tileType: 1
+  tileType: 1
