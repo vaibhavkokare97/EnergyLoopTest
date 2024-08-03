@@ -1,22 +1,16 @@
-public abstract class Singleton<T> where T : class
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Singleton<T> : MonoBehaviour
 {
-    public static T Instance;
+    public static T Instance { get; private set; }
 
-    public static T _instacene
-    {
-        get { return Instance; }
-    }
-
-    public Singleton()
+    protected virtual void Awake()
     {
         if (Instance == null)
         {
-            Instance = this as T;
+            Instance = GetComponent<T>();
         }
-        else
-        {
-            Instance = null;
-        }
-
     }
 }
