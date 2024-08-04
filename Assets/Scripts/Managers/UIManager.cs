@@ -1,18 +1,61 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private Button menuButton, playButton, nextButton;
+    [SerializeField] private List<Button> levelSwitchButtons;
+
+    [SerializeField] private Transform playScreen, menuScreen, levelCompleteScreen;
+
+    [SerializeField] private Slider progressBar;
+
+    private void Start()
     {
-        
+        menuButton.onClick.AddListener(() => ToggleToPlayScreen());
+        playButton.onClick.AddListener(() => ToggleToMenuScreen());
+        nextButton.onClick.AddListener(delegate {
+            LevelManager.Instance.SwitchToNextLevel();
+            ToggleToPlayScreen();
+        });
+
+        for (int i = 0; i < levelSwitchButtons.Count; i++)
+        {
+            int x = i;
+            levelSwitchButtons[x].onClick.AddListener(() => LevelManager.Instance.LevelSwitch(x));
+        };
+
+        ToggleToPlayScreen();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ToggleToPlayScreen()
     {
-        
+        playScreen.gameObject.SetActive(true);
+        menuScreen.gameObject.SetActive(false);
+        levelCompleteScreen.gameObject.SetActive(false);
+        GameManager.gameStage = GameManager.GameStage.Play;
+    }
+
+    public void ToggleToMenuScreen()
+    {
+        playScreen.gameObject.SetActive(false);
+        menuScreen.gameObject.SetActive(true);
+        levelCompleteScreen.gameObject.SetActive(false);
+        GameManager.gameStage = GameManager.GameStage.Menu;
+    }
+
+    public void ToggleToLevelCompleteScreen()
+    {
+        playScreen.gameObject.SetActive(false);
+        menuScreen.gameObject.SetActive(false);
+        levelCompleteScreen.gameObject.SetActive(true);
+        GameManager.gameStage = GameManager.GameStage.LevelComplete;
+    }
+
+    public void ProgressValueSet(int progress)
+    {
+        progressBar.value = progress;
     }
 }

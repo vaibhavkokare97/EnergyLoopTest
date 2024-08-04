@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Linq;
+using DG.Tweening;
 
 public abstract class TileDataBase : MonoBehaviour
 {
-    protected bool[] connectedLinksToSide = new bool[6] { false, false, false, false, false, false }; // start from top
+    [SerializeField] protected bool[] connectedLinksToSide = new bool[6] { false, false, false, false, false, false }; // start from top
 
     [HideInInspector] public Tile tile;
     protected Vector3 _location;
@@ -16,7 +17,7 @@ public abstract class TileDataBase : MonoBehaviour
 
     private Tilemap _tilemap;
     [HideInInspector] public List<TileDataBase> neighbouringTiles = new List<TileDataBase>(); // neighbour's start from top
-    private bool _energized = false;
+    protected bool _energized = false;
     public virtual bool energized
     {
         get
@@ -41,19 +42,43 @@ public abstract class TileDataBase : MonoBehaviour
         tile = new Tile(); // this is a tile
     }
 
+    private float _currentAngle = 0f;
+    public Action OnRotateClickAction;
+
+    private void Awake()
+    {
+        SnapToNearestAngle.SnapRotation(transform, Vector3.forward, 60f);
+        _currentAngle = transform.rotation.eulerAngles.z;
+
+    }
+
+    private void OnMouseDown()
+    {
+        if (GameManager.gameStage != GameManager.GameStage.Play)
+        {
+            return;
+        }
+        OnRotateClickAction?.Invoke();
+        transform.DORotate(new Vector3(0, 0, _currentAngle - 60f), 0.2f, RotateMode.Fast);
+        _currentAngle += -60f;
+    }
+
     protected virtual IEnumerator Start()
     {
         connectedLinksToSide = TileStructure.ConnectedSides(tileType);
-        yield return new WaitForSeconds(0.1f);
-        _tilemap = GameManager.Instance.constructLevel.tilemap;
+        int x = Mathf.FloorToInt(((float)((_currentAngle < 180) ? _currentAngle : (360f - _currentAngle))) / 60f);
+        Debug.Log(x);
+        ChangeConnectedLinks(x);
+        yield return new WaitForSeconds(0.05f);
+        _tilemap = GameManager.Instance.tilemap;
         _location = gameObject.transform.position;
         _tileLocation = _tilemap.WorldToCell(_location);
         _tilemap.SetTile(_tileLocation, tile);
 
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.05f);
         GetNeighbouringTiles();
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.05f);
         foreach (var item in neighbouringTiles)
         {
             if (item != null)
@@ -63,15 +88,15 @@ public abstract class TileDataBase : MonoBehaviour
 
         }
         OnEnergized += OnTileEnergize;
-        GetComponent<Rotate>().OnRotateClickAction += ChangeConnectedSides;
+        OnRotateClickAction += ChangeConnectedSides;
     }
 
-    void OnTileEnergize(bool onEnergize)
+    protected virtual void OnTileEnergize(bool onEnergize)
     {
-        GetComponent<SpriteRenderer>().color = (onEnergize) ? Color.white : new Color(1f,1f,1f, 0.2f);
+        GetComponent<SpriteRenderer>().color = (onEnergize) ? Color.white : new Color(1f, 1f, 1f, 0.2f);
     }
 
-    protected virtual void ChangeConnectedSides()
+    private void ChangeConnectedLinks(int n)
     {
         bool[] debugConnectedLinksToSide = new bool[6] { false, false, false, false, false, false };
         for (int i = 0; i < connectedLinksToSide.Length; i++)
@@ -81,11 +106,17 @@ public abstract class TileDataBase : MonoBehaviour
 
         for (int i = 0; i < connectedLinksToSide.Length; i++)
         {
-            connectedLinksToSide[i] = debugConnectedLinksToSide[(i + 5) % 6];
+            connectedLinksToSide[i] = debugConnectedLinksToSide[(i + 5 - (n - 1)) % 6];
         }
+    }
+
+
+    protected virtual void ChangeConnectedSides()
+    {
+        ChangeConnectedLinks(1);
 
         OnTileTap?.Invoke(this);
-        GameManager.Instance.constructLevel.Energize();
+        GameManager.Instance.Energize();
     }
 
 
@@ -93,11 +124,11 @@ public abstract class TileDataBase : MonoBehaviour
     {
         if (IsConnected(tappedTile))
         {
-            GameManager.Instance.constructLevel.tileNetwork.AddEdge(tappedTile, this);
+            GameManager.Instance.tileNetwork.AddEdge(tappedTile, this);
         }
         else
         {
-            GameManager.Instance.constructLevel.tileNetwork.RemoveEdge(tappedTile, this);
+            GameManager.Instance.tileNetwork.RemoveEdge(tappedTile, this);
         }
     }
 
@@ -105,35 +136,35 @@ public abstract class TileDataBase : MonoBehaviour
     public void GetNeighbouringTiles()
     {
         Tile tileTop = _tilemap.GetTile<Tile>(new Vector3Int(_tileLocation.x + 1, _tileLocation.y, _tileLocation.z));
-        TileDataBase tileTopData = (tileTop != null) ? GameManager.Instance.constructLevel.tileDataList[tileTop] : null;
+        TileDataBase tileTopData = (tileTop != null) ? GameManager.Instance.tileDataList[tileTop] : null;
         neighbouringTiles.Add(tileTopData);
 
         Vector3Int neighbouringLocationTopRight = (_tileLocation.y % 2 == 0) ? new Vector3Int(_tileLocation.x, _tileLocation.y + 1, _tileLocation.z) :
             new Vector3Int(_tileLocation.x + 1, _tileLocation.y + 1, _tileLocation.z);
         Tile tileTopRight = _tilemap.GetTile<Tile>(neighbouringLocationTopRight);
-        TileDataBase tileTopRightData = (tileTopRight != null) ? GameManager.Instance.constructLevel.tileDataList[tileTopRight] : null;
+        TileDataBase tileTopRightData = (tileTopRight != null) ? GameManager.Instance.tileDataList[tileTopRight] : null;
         neighbouringTiles.Add(tileTopRightData);
 
         Vector3Int neighbouringLocationBottomRight = (_tileLocation.y % 2 == 0) ? new Vector3Int(_tileLocation.x - 1, _tileLocation.y + 1, _tileLocation.z) :
             new Vector3Int(_tileLocation.x, _tileLocation.y + 1, _tileLocation.z);
         Tile tileBottomRight = _tilemap.GetTile<Tile>(neighbouringLocationBottomRight);
-        TileDataBase tileBottomRightData = (tileBottomRight != null) ? GameManager.Instance.constructLevel.tileDataList[tileBottomRight] : null;
+        TileDataBase tileBottomRightData = (tileBottomRight != null) ? GameManager.Instance.tileDataList[tileBottomRight] : null;
         neighbouringTiles.Add(tileBottomRightData);
 
         Tile tileBottom = _tilemap.GetTile<Tile>(new Vector3Int(_tileLocation.x - 1, _tileLocation.y, _tileLocation.z));
-        TileDataBase tileBottomData = (tileBottom != null) ? GameManager.Instance.constructLevel.tileDataList[tileBottom] : null;
+        TileDataBase tileBottomData = (tileBottom != null) ? GameManager.Instance.tileDataList[tileBottom] : null;
         neighbouringTiles.Add(tileBottomData);
 
         Vector3Int neighbouringLocationBottomLeft = (_tileLocation.y % 2 == 0) ? new Vector3Int(_tileLocation.x - 1, _tileLocation.y - 1, _tileLocation.z) :
             new Vector3Int(_tileLocation.x, _tileLocation.y - 1, _tileLocation.z);
         Tile tileBottomLeft = _tilemap.GetTile<Tile>(neighbouringLocationBottomLeft);
-        TileDataBase tileBottomLeftData = (tileBottomLeft != null) ? GameManager.Instance.constructLevel.tileDataList[tileBottomLeft] : null;
+        TileDataBase tileBottomLeftData = (tileBottomLeft != null) ? GameManager.Instance.tileDataList[tileBottomLeft] : null;
         neighbouringTiles.Add(tileBottomLeftData);
 
         Vector3Int neighbouringLocationTopLeft = (_tileLocation.y % 2 == 0) ? new Vector3Int(_tileLocation.x, _tileLocation.y - 1, _tileLocation.z) :
             new Vector3Int(_tileLocation.x + 1, _tileLocation.y - 1, _tileLocation.z);
         Tile tileTopLeft = _tilemap.GetTile<Tile>(neighbouringLocationTopLeft);
-        TileDataBase tileTopLeftData = (tileTopLeft != null) ? GameManager.Instance.constructLevel.tileDataList[tileTopLeft] : null;
+        TileDataBase tileTopLeftData = (tileTopLeft != null) ? GameManager.Instance.tileDataList[tileTopLeft] : null;
         neighbouringTiles.Add(tileTopLeftData);
     }
 
@@ -145,12 +176,12 @@ public abstract class TileDataBase : MonoBehaviour
         }
 
         int sideConnectedTo = ListElementAt(neighbouringTiles, neighbourTile);
-        if(sideConnectedTo == -1)
+        if (sideConnectedTo == -1)
         {
             return false;
         }
 
-        if(neighbourTile.connectedLinksToSide[(sideConnectedTo + 3) % 6] == true && connectedLinksToSide[sideConnectedTo] == true)
+        if (neighbourTile.connectedLinksToSide[(sideConnectedTo + 3) % 6] == true && connectedLinksToSide[sideConnectedTo] == true)
         {
             return true;
         }
@@ -159,10 +190,10 @@ public abstract class TileDataBase : MonoBehaviour
 
     public int ListElementAt<A>(List<A> list, A key)
     {
-        for (int i =0; i < list.Count; i++)
+        for (int i = 0; i < list.Count; i++)
         {
             if (list.ElementAt(i) == null) continue;
-            if(list.ElementAt(i).Equals(key))
+            if (list.ElementAt(i).Equals(key))
             {
                 return i;
             }
@@ -172,7 +203,7 @@ public abstract class TileDataBase : MonoBehaviour
 
     private void OnDisable()
     {
-        GetComponent<Rotate>().OnRotateClickAction -= ChangeConnectedSides;
+        OnRotateClickAction -= ChangeConnectedSides;
         OnEnergized -= OnTileEnergize;
         foreach (var item in neighbouringTiles)
         {

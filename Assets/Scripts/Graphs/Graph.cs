@@ -14,7 +14,7 @@ public class Graph<T>
     }
     public bool AddNode(T value)
     {
-        if(FindNodeInGraph(value) == null)
+        if (FindNodeInGraph(value) == null)
         {
             graphNodes.Add(new GraphNode<T>(value));
             return true; // add node
@@ -29,7 +29,7 @@ public class Graph<T>
     {
         GraphNode<T> graphNode1 = FindNodeInGraph(value1);
         GraphNode<T> graphNode2 = FindNodeInGraph(value2);
-        if(graphNode1 == null || graphNode2 == null)
+        if (graphNode1 == null || graphNode2 == null)
         {
             return false; //mising node
         }
@@ -51,7 +51,7 @@ public class Graph<T>
         if (FindNodeInGraph(value) == null)
         {
             return false;
-            
+
         }
         else
         {

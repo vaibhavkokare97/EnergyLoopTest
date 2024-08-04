@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2028384342087486052}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.46, y: 0.46, z: 0.46}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 6177386650648544193}
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 8004118ba4145a74e823fedaa37acf3a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ba2d3d7d05fd3e046b6d413365e9b11e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -95,10 +95,9 @@ GameObject:
   - component: {fileID: 6177386650648544193}
   - component: {fileID: 104633291334832522}
   - component: {fileID: 3577912155606829716}
-  - component: {fileID: 1464529612016466743}
-  - component: {fileID: 7477135774267385685}
+  - component: {fileID: 7745977946160975183}
   m_Layer: 0
-  m_Name: shapeFinalRender_specialBulb
+  m_Name: shapeFinalRender_specialEnergy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -162,7 +161,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1b6617aa11ea7244390909fa9a4adbe7, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.2}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -188,7 +187,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.43
---- !u!114 &1464529612016466743
+--- !u!114 &7745977946160975183
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -197,21 +196,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2966183999180187872}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf7c780c93eac3c4fa8e0c7c16acf73b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7477135774267385685
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2966183999180187872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 913240324256c3246ae8b2ec8a3ce9c0, type: 3}
+  m_Script: {fileID: 11500000, guid: 9718e99a9bbc6934faf7c61809f6af35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tile: {fileID: 0}
-  tileType: 4
+  tileType: 5
   neighbouringTiles: []

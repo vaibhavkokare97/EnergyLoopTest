@@ -18,8 +18,8 @@ public class TileStructure
     {
         switch (tileType)
         {
-            case TileType.TriangleConnectTile: 
-                return new bool[6] {false, true, false, true, false, true };
+            case TileType.TriangleConnectTile:
+                return new bool[6] { false, true, false, true, false, true };
                 break;
             case TileType.AdjacentSideConnectTile:
                 return new bool[6] { false, true, true, false, false, false };
