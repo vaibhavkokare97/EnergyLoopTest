@@ -6,12 +6,12 @@ using UnityEngine.Tilemaps;
 
 public class GameManager : Singleton<GameManager>
 {
-    [HideInInspector] public Tilemap tilemap;
+    [HideInInspector] public Tilemap tilemap; // active tilemap
     public Dictionary<Tile, TileDataBase> tileDataList = new Dictionary<Tile, TileDataBase>();
-    public Graph<TileDataBase> tileNetwork;
-    public static int energizedNodeCount;
-    [HideInInspector] public int totalBulbNodeCount;
-    [HideInInspector] public int energizedBulbNodeCount;
+    public Graph<TileDataBase> tileNetwork; // bi-directional graph system with nodes as tiles
+    public static int energizedNodeCount; // total energized tiles
+    [HideInInspector] public int totalBulbNodeCount; // total bulb tiles
+    [HideInInspector] public int energizedBulbNodeCount; // energized bulb tiles
     public static GameStage gameStage;
 
     List<GraphNode<TileDataBase>> nonEnergyTiles, energyTiles;
@@ -21,11 +21,6 @@ public class GameManager : Singleton<GameManager>
         Menu, Play, LevelComplete
     }
 
-    private void Update()
-    {
-        //Debug.Log(gameStage);
-    }
-
     private IEnumerator Start()
     {
         yield return new WaitUntil(() => LevelManager.Instance.unlockedLevels.Count > 0);
@@ -33,7 +28,9 @@ public class GameManager : Singleton<GameManager>
         gameStage = GameStage.Play;
     }
 
-
+    /// <summary>
+    /// Reset data on start of level
+    /// </summary>
     public void ResetData()
     {
         tileDataList.Clear();
@@ -52,6 +49,9 @@ public class GameManager : Singleton<GameManager>
         totalBulbNodeCount = bulbNodes.Count;
     }
 
+    /// <summary>
+    /// Energize the entire tileNetwork graph starting from energy node
+    /// </summary>
     public void Energize()
     {
         foreach (var node in nonEnergyTiles)
@@ -79,6 +79,10 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    /// <summary>
+    /// Recurssive function to loop through all neighbouring nodes for energizing
+    /// </summary>
+    /// <param name="tileDataNode">base node to wwhose neighbour have to be energized</param>
     private void EnergizeNeighbours(GraphNode<TileDataBase> tileDataNode)
     {
         if (tileDataNode.Neighbours.Count > 0)

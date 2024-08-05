@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SnapTiles : MonoBehaviour
 {
+    /// <summary>
+    /// Snaps tile to nearest 60 degree mark (help to designers)
+    /// </summary>
     public void SnapAllTiles()
     {
         List<TileDataBase> _tiledatabase = new List<TileDataBase>();

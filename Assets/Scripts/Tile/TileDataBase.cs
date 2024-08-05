@@ -28,7 +28,7 @@ public abstract class TileDataBase : MonoBehaviour
         {
             if (_energized != value)
             {
-                OnEnergized?.Invoke(value);
+                OnEnergized?.Invoke(value); // invoke event on energize value change
                 _energized = value;
             }
         }
@@ -37,15 +37,15 @@ public abstract class TileDataBase : MonoBehaviour
     public Action<bool> OnEnergized;
     public Action<TileDataBase> OnTileTap;
 
+    private float _currentAngle = 0f;
+    public Action OnRotateClickAction;
+
     public void SetTile()
     {
         tile = new Tile(); // this is a tile
     }
 
-    private float _currentAngle = 0f;
-    public Action OnRotateClickAction;
-
-    private void Awake()
+    protected virtual void Awake()
     {
         SnapToNearestAngle.SnapRotation(transform, Vector3.forward, 60f);
         _currentAngle = transform.rotation.eulerAngles.z;
@@ -92,11 +92,18 @@ public abstract class TileDataBase : MonoBehaviour
         OnRotateClickAction += ChangeConnectedSides;
     }
 
+    /// <summary>
+    /// Rotate Tile on tap
+    /// </summary>
     protected virtual void OnTileEnergize(bool onEnergize)
     {
         GetComponent<SpriteRenderer>().color = (onEnergize) ? Color.white : new Color(1f, 1f, 1f, 0.2f);
     }
 
+    /// <summary>
+    /// Update connected sides bool value
+    /// </summary>
+    /// <param name="n">number to switches(for 1 tap n = 1)</param>
     private void ChangeConnectedLinks(int n)
     {
         bool[] debugConnectedLinksToSide = new bool[6] { false, false, false, false, false, false };
@@ -133,7 +140,9 @@ public abstract class TileDataBase : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// get details of neighbouring tiles
+    /// </summary>
     public void GetNeighbouringTiles()
     {
         Tile tileTop = _tilemap.GetTile<Tile>(new Vector3Int(_tileLocation.x + 1, _tileLocation.y, _tileLocation.z));
@@ -169,6 +178,11 @@ public abstract class TileDataBase : MonoBehaviour
         neighbouringTiles.Add(tileTopLeftData);
     }
 
+    /// <summary>
+    /// check if tiles are neighbouring to each other
+    /// </summary>
+    /// <param name="neighbourTile"></param>
+    /// <returns></returns>
     public bool IsConnected(TileDataBase neighbourTile)
     {
         if (!neighbouringTiles.Contains(neighbourTile))

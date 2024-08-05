@@ -5,15 +5,18 @@ using UnityEngine.Tilemaps;
 
 public class LevelManager : Singleton<LevelManager>
 {
-    [SerializeField] private GameObject _grid;
-    public List<LevelData> levelDatas = new List<LevelData>();
-    public List<bool> unlockedLevels = new List<bool>();
+    [SerializeField] private GameObject _grid; // object under which tilemap are instansiated
+    public List<LevelData> levelDatas = new List<LevelData>(); // level information
+    public List<bool> unlockedLevels = new List<bool>(); // unlocked level information, this data is saved in json
 
     public int TotalLevels()
     {
         return levelDatas.Count;
     }
 
+    /// <summary>
+    /// current playing levle
+    /// </summary>
     [SerializeField] private int _currentLevel;
     public int currentLevel
     {
@@ -24,7 +27,7 @@ public class LevelManager : Singleton<LevelManager>
 
         set
         {
-            _currentLevel = value % levelDatas.Count;
+            _currentLevel = value % levelDatas.Count; // we dont want current level to exceed total levels available to play
         }
     }
 
@@ -46,6 +49,11 @@ public class LevelManager : Singleton<LevelManager>
         }
     }
 
+    /// <summary>
+    /// Change level to another
+    /// </summary>
+    /// <param name="levelClicked">which level to play</param>
+    /// <param name="forceSwitch">don't check if already playing level is same or not</param>
     public void LevelSwitch(int levelClicked, bool forceSwitch = false)
     {
         if (unlockedLevels[levelClicked] == false)
@@ -70,6 +78,9 @@ public class LevelManager : Singleton<LevelManager>
         GameManager.Instance.ResetData();
     }
 
+    /// <summary>
+    /// Change to next level
+    /// </summary>
     public void SwitchToNextLevel()
     {
         currentLevel++;
@@ -80,11 +91,18 @@ public class LevelManager : Singleton<LevelManager>
     }
 
 
+    /// <summary>
+    /// Save unlocked level data to json
+    /// </summary>
     public void SaveLevelData()
     {
         Save.SaveData(unlockedLevels.ToArray());
     }
 
+    /// <summary>
+    /// Load unlocked level data
+    /// </summary>
+    /// <returns>Array of bool of unlocked levels</returns>
     public bool[] LoadLevelData()
     {
         return Save.LoadData<bool>();

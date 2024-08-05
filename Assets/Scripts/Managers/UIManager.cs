@@ -54,6 +54,10 @@ public class UIManager : Singleton<UIManager>
         GameManager.gameStage = GameManager.GameStage.LevelComplete;
     }
 
+    /// <summary>
+    /// level progress bar
+    /// </summary>
+    /// <param name="progress">progress from 0 to 100</param>
     public void ProgressValueSet(int progress)
     {
         progressBar.value = progress;
