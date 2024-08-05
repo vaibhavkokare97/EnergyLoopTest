@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Level2
   m_EditorClassIdentifier: 
   LevelName: Level2
-  LevelTileMap: {fileID: 9074895279154974277, guid: 0df78cbcdb49ced49bd4ea06e58c9265, type: 3}
+  LevelTileMap: {fileID: 9074895279154974277, guid: e808410543c307d42ad091b0374d66ac, type: 3}
   defaultLock: 1
