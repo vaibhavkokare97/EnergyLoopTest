@@ -52,13 +52,14 @@ public abstract class TileDataBase : MonoBehaviour
 
     }
 
-    private void OnMouseDown()
+    protected virtual void OnMouseDown()
     {
         if (GameManager.gameStage != GameManager.GameStage.Play)
         {
             return;
         }
         OnRotateClickAction?.Invoke();
+        AudioManager.Instance.PlayOneShout(AudioManager.Instance.tileClickSound);
         transform.DORotate(new Vector3(0, 0, _currentAngle - 60f), 0.2f, RotateMode.Fast);
         _currentAngle += -60f;
     }
@@ -66,7 +67,7 @@ public abstract class TileDataBase : MonoBehaviour
     protected virtual IEnumerator Start()
     {
         connectedLinksToSide = TileStructure.ConnectedSides(tileType);
-        int x = Mathf.FloorToInt(((float)((_currentAngle < 180) ? _currentAngle : (360f - _currentAngle))) / 60f);
+        int x = Mathf.FloorToInt(((float)((_currentAngle < 180) ? _currentAngle : (360f - _currentAngle))) / 60f); // fix this
         Debug.Log(x);
         ChangeConnectedLinks(x);
         yield return new WaitForSeconds(0.05f);
