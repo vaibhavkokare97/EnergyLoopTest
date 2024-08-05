@@ -69,12 +69,14 @@ public class GameManager : Singleton<GameManager>
             }
         }
 
-        ScoreManager.Instance.SetLevelProgress(energizedNodeCount, tileNetwork.Nodes.Count);
+        LevelManager.Instance.SetLevelProgress(energizedNodeCount, tileNetwork.Nodes.Count);
         if (energizedBulbNodeCount == totalBulbNodeCount)
         {
             int nextLevel = LevelManager.Instance.currentLevel + 1;
             LevelManager.Instance.unlockedLevels[nextLevel % 3] = true;
+            UIManager.Instance.ChangeLevelsInteractabilityOnLock(LevelManager.Instance.unlockedLevels.ToArray());
             LevelManager.Instance.SaveLevelData();
+            AudioManager.Instance.PlayOneShot(AudioManager.Instance.levelCompleteSound);
             UIManager.Instance.ToggleToLevelCompleteScreen();
         }
     }

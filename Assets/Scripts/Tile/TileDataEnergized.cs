@@ -13,8 +13,21 @@ public class TileDataEnergized : TileDataBase
         }
     }
 
+    private Quaternion _initialRotation;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _initialRotation = transform.rotation;
+    }
+
+    /// <summary>
+    /// Don't allow energized tile to rotate
+    /// </summary>
     protected override void OnMouseDown()
     {
-        transform.DOShakeRotation(0.2f, 20f);
+        transform
+            .DOPunchRotation(new Vector3(0, 0, -30f), 0.2f)
+            .OnComplete(delegate { transform.rotation = _initialRotation; });
     }
 }

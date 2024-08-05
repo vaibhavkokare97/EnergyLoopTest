@@ -8,15 +8,15 @@ using DG.Tweening;
 
 public abstract class TileDataBase : MonoBehaviour
 {
-    [SerializeField] protected bool[] connectedLinksToSide = new bool[6] { false, false, false, false, false, false }; // start from top
-
     [HideInInspector] public Tile tile;
     protected Vector3 _location;
     protected Vector3Int _tileLocation;
     public TileStructure.TileType tileType;
 
-    private Tilemap _tilemap;
+    private Tilemap _tilemap; // keeping reference to active tilemap
+
     [HideInInspector] public List<TileDataBase> neighbouringTiles = new List<TileDataBase>(); // neighbour's start from top
+    [SerializeField] protected bool[] _connectedLinksToSide = new bool[6] { false, false, false, false, false, false }; // start from top
     protected bool _energized = false;
     public virtual bool energized
     {
@@ -52,22 +52,10 @@ public abstract class TileDataBase : MonoBehaviour
 
     }
 
-    protected virtual void OnMouseDown()
-    {
-        if (GameManager.gameStage != GameManager.GameStage.Play)
-        {
-            return;
-        }
-        OnRotateClickAction?.Invoke();
-        AudioManager.Instance.PlayOneShout(AudioManager.Instance.tileClickSound);
-        transform.DORotate(new Vector3(0, 0, _currentAngle - 60f), 0.2f, RotateMode.Fast);
-        _currentAngle += -60f;
-    }
-
     protected virtual IEnumerator Start()
     {
-        connectedLinksToSide = TileStructure.ConnectedSides(tileType);
-        int x = Mathf.FloorToInt(((float)((_currentAngle < 180) ? _currentAngle : (360f - _currentAngle))) / 60f); // fix this
+        _connectedLinksToSide = TileStructure.ConnectedSides(tileType);
+        int x = 6 /*total sides of hexagon*/ - Mathf.FloorToInt(((float)(TileStructure.Clamp0360(_currentAngle))) / 60f); // fix this
         Debug.Log(x);
         ChangeConnectedLinks(x);
         yield return new WaitForSeconds(0.05f);
@@ -95,6 +83,18 @@ public abstract class TileDataBase : MonoBehaviour
     /// <summary>
     /// Rotate Tile on tap
     /// </summary>
+    protected virtual void OnMouseDown()
+    {
+        if (GameManager.gameStage != GameManager.GameStage.Play)
+        {
+            return;
+        }
+        OnRotateClickAction?.Invoke();
+        AudioManager.Instance.PlayOneShot(AudioManager.Instance.tileClickSound);
+        transform.DORotate(new Vector3(0, 0, _currentAngle - 60f), 0.2f, RotateMode.Fast);
+        _currentAngle += -60f;
+    }
+
     protected virtual void OnTileEnergize(bool onEnergize)
     {
         GetComponent<SpriteRenderer>().color = (onEnergize) ? Color.white : new Color(1f, 1f, 1f, 0.2f);
@@ -107,14 +107,14 @@ public abstract class TileDataBase : MonoBehaviour
     private void ChangeConnectedLinks(int n)
     {
         bool[] debugConnectedLinksToSide = new bool[6] { false, false, false, false, false, false };
-        for (int i = 0; i < connectedLinksToSide.Length; i++)
+        for (int i = 0; i < _connectedLinksToSide.Length; i++)
         {
-            debugConnectedLinksToSide[i] = connectedLinksToSide[i];
+            debugConnectedLinksToSide[i] = _connectedLinksToSide[i];
         }
 
-        for (int i = 0; i < connectedLinksToSide.Length; i++)
+        for (int i = 0; i < _connectedLinksToSide.Length; i++)
         {
-            connectedLinksToSide[i] = debugConnectedLinksToSide[(i + 5 - (n - 1)) % 6];
+            _connectedLinksToSide[i] = debugConnectedLinksToSide[(i + 5 - (n - 1)) % 6];
         }
     }
 
@@ -196,7 +196,7 @@ public abstract class TileDataBase : MonoBehaviour
             return false;
         }
 
-        if (neighbourTile.connectedLinksToSide[(sideConnectedTo + 3) % 6] == true && connectedLinksToSide[sideConnectedTo] == true)
+        if (neighbourTile._connectedLinksToSide[(sideConnectedTo + 3) % 6] == true && _connectedLinksToSide[sideConnectedTo] == true)
         {
             return true;
         }

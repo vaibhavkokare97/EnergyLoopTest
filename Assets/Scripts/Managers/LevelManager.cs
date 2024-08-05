@@ -31,6 +31,22 @@ public class LevelManager : Singleton<LevelManager>
         }
     }
 
+    private int _levelProgress;
+    public int levelProgress
+    {
+        get
+        {
+            return _levelProgress;
+        }
+        set
+        {
+            _levelProgress = Mathf.Clamp(value, 0, 100);
+            UIManager.Instance.ProgressValueSet(_levelProgress);
+        }
+    }
+
+   
+
     protected override void Awake()
     {
         base.Awake();
@@ -47,6 +63,7 @@ public class LevelManager : Singleton<LevelManager>
                 unlockedLevels.Add(false);
             }
         }
+        UIManager.Instance.ChangeLevelsInteractabilityOnLock(unlockedLevels.ToArray());
     }
 
     /// <summary>
@@ -72,8 +89,9 @@ public class LevelManager : Singleton<LevelManager>
         }
         currentLevel = levelClicked;
         GameObject tileGameObject = Instantiate(levelDatas[currentLevel].LevelTileMap, _grid.transform);
+        AudioManager.Instance.PlayOneShot(AudioManager.Instance.levelStartSound);
         GameManager.Instance.tilemap = tileGameObject.GetComponent<Tilemap>();
-        ScoreManager.Instance.SetLevelProgress(0, 1);
+        SetLevelProgress(0, 1);
 
         GameManager.Instance.ResetData();
     }
@@ -87,9 +105,12 @@ public class LevelManager : Singleton<LevelManager>
         
         // current level is the new level
         LevelSwitch(currentLevel, true);
-
     }
 
+    public void SetLevelProgress(int completedNodes, int totalNodes)
+    {
+        levelProgress = Mathf.CeilToInt(((float)completedNodes / (float)totalNodes) * 100);
+    }
 
     /// <summary>
     /// Save unlocked level data to json
@@ -112,6 +133,8 @@ public class LevelManager : Singleton<LevelManager>
     {
         SaveLevelData();
     }
+
+
 
 
 }

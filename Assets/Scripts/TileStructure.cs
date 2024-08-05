@@ -32,4 +32,14 @@ public class TileStructure
                 return new bool[6] { false, false, false, false, false, false };
         }
     }
+
+    public static float Clamp0360(float eulerAngles)
+    {
+        float result = eulerAngles - Mathf.CeilToInt(eulerAngles / 360f) * 360f;
+        if (result < 0)
+        {
+            result += 360f;
+        }
+        return result;
+    }
 }

@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioManager : Singleton<AudioManager>
 {
     public AudioSource audioSource;
 
-    public AudioClip tileClickSound;
+    public AudioClip tileClickSound, levelStartSound, levelCompleteSound;
 
-    public void PlayOneShout(AudioClip audioClip)
+    public void PlayOneShot(AudioClip audioClip)
     {
         audioSource.PlayOneShot(audioClip);
     }

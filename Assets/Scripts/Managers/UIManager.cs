@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -9,6 +10,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private List<Button> levelSwitchButtons;
 
     [SerializeField] private Transform playScreen, menuScreen, levelCompleteScreen;
+    [SerializeField] private Transform levelCompleteDialog;
 
     [SerializeField] private Slider progressBar;
 
@@ -51,6 +53,7 @@ public class UIManager : Singleton<UIManager>
         playScreen.gameObject.SetActive(false);
         menuScreen.gameObject.SetActive(false);
         levelCompleteScreen.gameObject.SetActive(true);
+        levelCompleteDialog.DOPunchScale(new Vector3(2f, 2f, 2f), 0.3f, 0);
         GameManager.gameStage = GameManager.GameStage.LevelComplete;
     }
 
@@ -61,5 +64,13 @@ public class UIManager : Singleton<UIManager>
     public void ProgressValueSet(int progress)
     {
         progressBar.value = progress;
+    }
+
+    public void ChangeLevelsInteractabilityOnLock(bool[] unlockedLevels)
+    {
+        for (int i = 0; i < levelSwitchButtons.Count; i++)
+        {
+            levelSwitchButtons[i].interactable = unlockedLevels[i];
+        }
     }
 }
